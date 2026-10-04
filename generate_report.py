@@ -253,8 +253,378 @@ MoM Growth % = ((Current Month Revenue - Previous Month Revenue) / Previous Mont
     for calc in additional_calcs:
         doc.add_paragraph(calc, style='List Bullet')
     
-    # Continue with remaining sections...
-    # For brevity, I'll add the key sections. The full implementation would continue with all 16 sections.
+    # 7. Core Features Implemented
+    doc.add_heading('7. Core Features Implemented', 1)
+    
+    doc.add_heading('7.1 Interactive Filtering System', 2)
+    filter_text = """The dashboard implements a comprehensive filtering system with Apply/Reset button functionality. Users can filter data across four dimensions: Month, Region, Channel, and Category. The system uses Streamlit session state to manage temporary filter selections and applied filters separately, preventing performance issues from real-time filtering on large datasets."""
+    doc.add_paragraph(filter_text)
+    
+    filter_features = [
+        "Multi-select dropdowns for each filter dimension",
+        "Apply button mechanism to batch filter changes",
+        "Reset functionality to clear all filters",
+        "Visual feedback showing active vs pending filters",
+        "Session state persistence across user interactions"
+    ]
+    
+    for feature in filter_features:
+        doc.add_paragraph(feature, style='List Bullet')
+    
+    doc.add_heading('7.2 Dynamic Theme Toggle', 2)
+    theme_text = """A professional light/dark theme system with complete UI consistency. The theme toggle affects all components including charts, dropdowns, buttons, and text elements. Custom CSS ensures proper visibility and user experience in both modes."""
+    doc.add_paragraph(theme_text)
+    
+    theme_features = [
+        "Session state-based theme persistence",
+        "Comprehensive CSS styling for all Streamlit components",
+        "Theme-aware color schemes for Plotly visualizations",
+        "Dynamic button styling without visual artifacts",
+        "Consistent text visibility across all UI elements"
+    ]
+    
+    for feature in theme_features:
+        doc.add_paragraph(feature, style='List Bullet')
+    
+    doc.add_heading('7.3 Executive Dashboard Layout', 2)
+    layout_text = """Professional executive-level dashboard layout with KPI cards, interactive visualizations, and business insights. The design follows dashboard best practices with clear information hierarchy and responsive design."""
+    doc.add_paragraph(layout_text)
+    
+    layout_features = [
+        "KPI card layout with formatted currency and numbers",
+        "Monthly revenue trend with month-over-month growth calculations",
+        "Multi-dimensional analysis views (Region, Channel, Category, Products)",
+        "Automated business insights generation",
+        "Professional styling with proper spacing and typography"
+    ]
+    
+    for feature in layout_features:
+        doc.add_paragraph(feature, style='List Bullet')
+    
+    # 8. Technical Implementation Challenges
+    doc.add_heading('8. Technical Implementation Challenges', 1)
+    
+    doc.add_heading('8.1 Data Processing and Validation', 2)
+    data_challenge = """The T01 dataset required careful handling of mixed data types, date parsing with timezone information, and currency formatting. I implemented robust data validation to ensure calculations are accurate and handle edge cases like empty filters or missing data."""
+    doc.add_paragraph(data_challenge)
+    
+    data_solutions = [
+        "Implemented pandas data type conversion with error handling",
+        "Created date parsing logic to handle timezone strings in order_date column",
+        "Added data validation functions to verify KPI calculation accuracy",
+        "Built error handling for file loading and sheet access",
+        "Ensured proper handling of null values and data integrity"
+    ]
+    
+    for solution in data_solutions:
+        doc.add_paragraph(solution, style='List Bullet')
+    
+    doc.add_heading('8.2 Streamlit State Management', 2)
+    state_challenge = """Managing filter states and theme preferences required careful implementation of Streamlit session state. The challenge was preventing unwanted re-runs while maintaining responsive user interaction."""
+    doc.add_paragraph(state_challenge)
+    
+    state_solutions = [
+        "Implemented dual-state system (temp_filters vs applied_filters)",
+        "Used session state for theme persistence across page reloads",
+        "Added proper state initialization with default values",
+        "Managed component keys to prevent state conflicts",
+        "Optimized re-run triggers for better performance"
+    ]
+    
+    for solution in state_solutions:
+        doc.add_paragraph(solution, style='List Bullet')
+    
+    doc.add_heading('8.3 CSS Theme Integration', 2)
+    css_challenge = """Creating comprehensive theme support required extensive CSS targeting of Streamlit's internal components. The challenge was ensuring complete coverage without breaking responsive design."""
+    doc.add_paragraph(css_challenge)
+    
+    css_solutions = [
+        "Developed comprehensive CSS selectors for all Streamlit components",
+        "Implemented theme-aware color functions with proper contrast ratios",
+        "Added specific targeting for dropdown menus and interactive elements",
+        "Created dynamic CSS injection based on current theme state",
+        "Ensured accessibility compliance with proper color contrast"
+    ]
+    
+    for solution in css_solutions:
+        doc.add_paragraph(solution, style='List Bullet')
+    
+    # 9. Validation and Quality Assurance
+    doc.add_heading('9. Validation and Quality Assurance', 1)
+    
+    doc.add_heading('9.1 KPI Validation Benchmarks', 2)
+    validation_text = """All KPI calculations were validated against known benchmarks to ensure accuracy. I established validation targets and implemented automated testing to verify calculation integrity."""
+    doc.add_paragraph(validation_text)
+    
+    # Create validation table
+    val_table = doc.add_table(rows=1, cols=3)
+    val_table.style = 'Table Grid'
+    val_hdr = val_table.rows[0].cells
+    val_hdr[0].text = 'KPI'
+    val_hdr[1].text = 'Expected Value'
+    val_hdr[2].text = 'Validation Status'
+    
+    for cell in val_hdr:
+        for paragraph in cell.paragraphs:
+            for run in paragraph.runs:
+                run.font.bold = True
+    
+    val_data = [
+        ['Total Revenue', '₹24,092,037.95', '✅ Validated'],
+        ['Units Sold', '12,001 units', '✅ Validated'],
+        ['Average Order Value', '₹12,046.02', '✅ Validated'],
+        ['Gross Margin %', '33.39%', '✅ Validated']
+    ]
+    
+    for val_row in val_data:
+        row_cells = val_table.add_row().cells
+        row_cells[0].text = val_row[0]
+        row_cells[1].text = val_row[1]
+        row_cells[2].text = val_row[2]
+    
+    doc.add_heading('9.2 Functional Testing', 2)
+    testing_text = """Comprehensive testing was performed across all filter combinations, theme modes, and edge cases to ensure robust application behavior."""
+    doc.add_paragraph(testing_text)
+    
+    test_areas = [
+        "Filter functionality: All combinations of month, region, channel, and category filters",
+        "Theme switching: Complete UI consistency in both light and dark modes",
+        "Data integrity: Verification of calculations across different filter states",
+        "Error handling: Graceful handling of missing files and invalid data",
+        "Performance testing: Response times for large filter operations",
+        "Cross-browser compatibility: Testing across different browser environments"
+    ]
+    
+    for test in test_areas:
+        doc.add_paragraph(test, style='List Bullet')
+    
+    doc.add_heading('9.3 Code Quality Standards', 2)
+    quality_text = """The codebase follows Python best practices with proper documentation, error handling, and modular architecture suitable for enterprise deployment."""
+    doc.add_paragraph(quality_text)
+    
+    quality_standards = [
+        "PEP 8 compliance for Python code formatting",
+        "Comprehensive docstrings for all functions",
+        "Type hints where applicable for better code maintenance",
+        "Error handling with informative user messages",
+        "Separation of concerns with modular utils package",
+        "Performance optimization with Streamlit caching decorators"
+    ]
+    
+    for standard in quality_standards:
+        doc.add_paragraph(standard, style='List Bullet')
+    
+    # 10. Business Insights Generated
+    doc.add_heading('10. Business Insights Generated', 1)
+    
+    doc.add_heading('10.1 Automated Insight Engine', 2)
+    insight_text = """The dashboard includes an AI-powered insight generation system that analyzes filtered data and provides contextual business observations. These insights adapt dynamically based on user selections."""
+    doc.add_paragraph(insight_text)
+    
+    doc.add_heading('10.2 Key Business Findings', 2)
+    findings_text = """Based on the T01 dataset analysis, several key business patterns emerged:"""
+    doc.add_paragraph(findings_text)
+    
+    findings = [
+        "Revenue Performance: Total revenue of ₹24+ million across all channels and regions",
+        "Order Volume: 12,001 units sold with healthy average order value of ₹12,046",
+        "Profitability: Strong gross margin of 33.39% indicating healthy business model",
+        "Growth Trends: Month-over-month analysis reveals seasonal patterns and growth opportunities",
+        "Regional Performance: Geographic analysis shows performance variations across different markets",
+        "Channel Effectiveness: Multi-channel analysis reveals optimal sales channel performance"
+    ]
+    
+    for finding in findings:
+        doc.add_paragraph(finding, style='List Bullet')
+    
+    doc.add_heading('10.3 Strategic Recommendations', 2)
+    recommendations = [
+        "Focus on high-performing regions and channels for expansion opportunities",
+        "Investigate seasonal trends for better inventory and campaign planning",
+        "Optimize product mix based on category performance analysis",
+        "Leverage month-over-month growth data for forecasting and budgeting"
+    ]
+    
+    for rec in recommendations:
+        doc.add_paragraph(rec, style='List Bullet')
+    
+    # 11. AI-Assisted Development Process
+    doc.add_heading('11. AI-Assisted Development Process', 1)
+    
+    doc.add_heading('11.1 Development Methodology', 2)
+    ai_process = """This project utilized AI-powered development tools within the Kiro IDE, demonstrating modern human-AI collaborative software development. The process combined AI assistance with human oversight for optimal results."""
+    doc.add_paragraph(ai_process)
+    
+    doc.add_heading('11.2 AI Contributions', 2)
+    ai_contributions = [
+        "Code Architecture: AI suggested modular structure with utils package organization",
+        "Feature Implementation: Assisted with complex Streamlit state management and CSS styling",
+        "Problem Solving: Provided solutions for theme integration and filter optimization",
+        "Documentation: Helped generate comprehensive technical documentation",
+        "Testing Guidance: Suggested validation approaches and test scenarios",
+        "Best Practices: Recommended industry standards for dashboard development"
+    ]
+    
+    for contribution in ai_contributions:
+        doc.add_paragraph(contribution, style='List Bullet')
+    
+    doc.add_heading('11.3 Human Oversight and Validation', 2)
+    human_role = """While AI provided significant assistance, human oversight was critical for business logic validation, user experience design, and quality assurance. All AI suggestions were evaluated for appropriateness and business context."""
+    doc.add_paragraph(human_role)
+    
+    human_oversight = [
+        "Business Requirements: Defined functional requirements and user experience goals",
+        "Code Review: Validated all AI-generated code for accuracy and best practices",
+        "Testing Strategy: Designed comprehensive testing approaches for quality assurance",
+        "Design Decisions: Made final decisions on UI/UX and feature prioritization",
+        "Integration: Ensured seamless integration of all components and features"
+    ]
+    
+    for oversight in human_oversight:
+        doc.add_paragraph(oversight, style='List Bullet')
+    
+    # 12. Responsible AI Practices
+    doc.add_heading('12. Responsible AI Practices', 1)
+    
+    doc.add_heading('12.1 Ethical Development Approach', 2)
+    ethical_text = """The project followed responsible AI development practices, ensuring transparency, accountability, and ethical use of AI assistance throughout the development lifecycle."""
+    doc.add_paragraph(ethical_text)
+    
+    doc.add_heading('12.2 Transparency and Documentation', 2)
+    transparency_practices = [
+        "Clear documentation of AI contributions vs human contributions",
+        "Transparent reporting of development methodology and tool usage",
+        "Comprehensive code comments explaining logic and decision rationale",
+        "Open acknowledgment of AI assistance in project documentation",
+        "Detailed testing and validation records for accountability"
+    ]
+    
+    for practice in transparency_practices:
+        doc.add_paragraph(practice, style='List Bullet')
+    
+    doc.add_heading('12.3 Quality Assurance and Bias Prevention', 2)
+    quality_measures = [
+        "Human validation of all business logic and calculations",
+        "Cross-verification of data processing and aggregation methods",
+        "Testing across diverse data scenarios to prevent algorithmic bias",
+        "Regular review of AI suggestions for appropriateness and accuracy",
+        "Implementation of robust error handling and data validation"
+    ]
+    
+    for measure in quality_measures:
+        doc.add_paragraph(measure, style='List Bullet')
+    
+    # 13. Project Limitations
+    doc.add_heading('13. Project Limitations', 1)
+    
+    doc.add_heading('13.1 Current Scope Limitations', 2)
+    limitations_text = """While the dashboard successfully meets the assignment requirements, several areas could be enhanced in future iterations:"""
+    doc.add_paragraph(limitations_text)
+    
+    current_limitations = [
+        "Data Source: Single Excel file dependency; production systems would require database integration",
+        "Real-time Updates: Static data analysis; live business systems need real-time data feeds",
+        "Advanced Analytics: Basic statistical analysis; could benefit from predictive modeling",
+        "User Management: Single-user application; enterprise deployment needs authentication",
+        "Scalability: Designed for dataset size in scope; larger datasets may require optimization"
+    ]
+    
+    for limitation in current_limitations:
+        doc.add_paragraph(limitation, style='List Bullet')
+    
+    doc.add_heading('13.2 Technical Constraints', 2)
+    technical_constraints = [
+        "Browser Dependency: Requires modern web browser with JavaScript enabled",
+        "Python Environment: Needs specific Python version and package dependencies",
+        "Memory Usage: Large datasets may require additional memory optimization",
+        "Network Requirements: Web-based interface requires stable internet connection for deployment"
+    ]
+    
+    for constraint in technical_constraints:
+        doc.add_paragraph(constraint, style='List Bullet')
+    
+    # 14. Future Enhancement Opportunities
+    doc.add_heading('14. Future Enhancement Opportunities', 1)
+    
+    doc.add_heading('14.1 Advanced Analytics Features', 2)
+    advanced_features = [
+        "Predictive Analytics: Forecasting models for revenue and sales trends",
+        "Machine Learning: Customer segmentation and behavior analysis",
+        "Statistical Analysis: Correlation analysis and significance testing",
+        "Advanced Visualizations: Geographic maps, network graphs, and advanced chart types"
+    ]
+    
+    for feature in advanced_features:
+        doc.add_paragraph(feature, style='List Bullet')
+    
+    doc.add_heading('14.2 Enterprise Integration', 2)
+    enterprise_features = [
+        "Database Integration: Connect to SQL databases and data warehouses",
+        "API Development: REST APIs for programmatic access to dashboard functionality",
+        "User Authentication: Role-based access control and user management",
+        "Automated Reporting: Scheduled report generation and email distribution",
+        "Mobile Optimization: Responsive design for tablet and mobile devices"
+    ]
+    
+    for feature in enterprise_features:
+        doc.add_paragraph(feature, style='List Bullet')
+    
+    doc.add_heading('14.3 Performance Optimization', 2)
+    performance_enhancements = [
+        "Caching Strategy: Advanced caching for improved response times",
+        "Data Preprocessing: Optimized data loading and processing pipelines",
+        "Lazy Loading: On-demand visualization rendering for large datasets",
+        "CDN Integration: Content delivery network for faster asset loading"
+    ]
+    
+    for enhancement in performance_enhancements:
+        doc.add_paragraph(enhancement, style='List Bullet')
+    
+    # 15. Personal Learning Reflection
+    doc.add_heading('15. Personal Learning Reflection', 1)
+    
+    doc.add_heading('15.1 Technical Skills Development', 2)
+    technical_learning = """This project significantly enhanced my technical capabilities in data visualization, web development, and AI-assisted programming. Working with Streamlit provided hands-on experience with modern dashboard development frameworks."""
+    doc.add_paragraph(technical_learning)
+    
+    skills_gained = [
+        "Streamlit Framework: Mastery of interactive web application development",
+        "Data Visualization: Advanced Plotly charting and interactive visualization techniques",
+        "Python Development: Enhanced skills in pandas, data manipulation, and modular programming",
+        "UI/UX Design: Understanding of dashboard design principles and user experience",
+        "State Management: Complex application state handling and performance optimization"
+    ]
+    
+    for skill in skills_gained:
+        doc.add_paragraph(skill, style='List Bullet')
+    
+    doc.add_heading('15.2 Business Analysis Insights', 2)
+    business_learning = """The project deepened my understanding of business intelligence requirements and the importance of translating raw data into actionable insights for executive decision-making."""
+    doc.add_paragraph(business_learning)
+    
+    business_insights = [
+        "KPI Selection: Understanding which metrics matter most for sales performance analysis",
+        "Executive Reporting: Creating clear, concise visualizations for senior stakeholders",
+        "Data Storytelling: Presenting data in ways that drive business understanding",
+        "Filtering Strategy: Designing intuitive interfaces for complex data exploration"
+    ]
+    
+    for insight in business_insights:
+        doc.add_paragraph(insight, style='List Bullet')
+    
+    doc.add_heading('15.3 AI-Assisted Development Learning', 2)
+    ai_learning = """Working with AI development tools provided valuable insights into modern software development practices and the future of human-AI collaboration in programming."""
+    doc.add_paragraph(ai_learning)
+    
+    ai_lessons = [
+        "Prompt Engineering: Effective communication with AI development assistants",
+        "Code Review Skills: Critical evaluation of AI-generated code and suggestions",
+        "Collaborative Development: Balancing AI assistance with human expertise and judgment",
+        "Quality Assurance: Maintaining high standards while leveraging AI productivity gains"
+    ]
+    
+    for lesson in ai_lessons:
+        doc.add_paragraph(lesson, style='List Bullet')
     
     # 16. Conclusion
     doc.add_heading('16. Conclusion', 1)
