@@ -272,21 +272,28 @@ def generate_insights(df, original_df):
 
 
 def format_currency(value):
+    """Format an INR amount using Lakhs (L) and Crores (Cr).
+
+    Values from ₹1,00,000 use Lakhs and values from ₹1,00,00,000 use
+    Crores. The rupee symbol is deliberately omitted so callers can place it
+    appropriately in plain text, HTML, chart labels, or metrics.
     """
-    Format currency value in Indian format (Lakhs/Crores)
-    
-    Args:
-        value: Numeric value to format
-        
-    Returns:
-        Formatted string
-    """
-    if value >= 10000000:  # 1 Crore
-        return f"{value / 10000000:.2f} Cr"
-    elif value >= 100000:  # 1 Lakh
-        return f"{value / 100000:.2f} L"
-    else:
-        return f"{value:,.0f}"
+    try:
+        numeric_value = float(value)
+    except (TypeError, ValueError):
+        return "0"
+
+    if not np.isfinite(numeric_value):
+        return "0"
+
+    absolute_value = abs(numeric_value)
+    sign = "-" if numeric_value < 0 else ""
+
+    if absolute_value >= 10_000_000:  # ₹1 crore
+        return f"{sign}{absolute_value / 10_000_000:.2f} Cr"
+    if absolute_value >= 100_000:  # ₹1 lakh
+        return f"{sign}{absolute_value / 100_000:.2f} L"
+    return f"{numeric_value:,.0f}"
 
 
 def format_number(value):

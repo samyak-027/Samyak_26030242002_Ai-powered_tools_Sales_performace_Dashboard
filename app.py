@@ -10,6 +10,8 @@ import streamlit as st
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
+import html
+import re
 from pathlib import Path
 
 # Import utility functions
@@ -74,7 +76,8 @@ def get_theme_colors():
             'card_bg': '#1e1e1e',
             'insight_bg': '#1a2332',
             'chart_bg': '#262730',
-            'grid_color': '#404040'
+            'grid_color': '#404040',
+            'color_scheme': 'dark'
         }
     else:
         return {
@@ -88,8 +91,31 @@ def get_theme_colors():
             'card_bg': '#f0f2f6',
             'insight_bg': '#e8f4f8',
             'chart_bg': '#ffffff',
-            'grid_color': '#e0e0e0'
+            'grid_color': '#e0e0e0',
+            'color_scheme': 'light'
         }
+
+
+def render_plotly_chart(fig, theme_colors):
+    """Render a chart with the dashboard theme, not Streamlit's Plotly theme."""
+    fig.update_layout(
+        template=None,
+        hoverlabel=dict(
+            bgcolor=theme_colors['card_bg'],
+            bordercolor=theme_colors['border'],
+            font=dict(color=theme_colors['text_primary'], size=12),
+            align='left'
+        )
+    )
+    # ``theme=None`` prevents Streamlit from merging its own Plotly template
+    # into the figure (which otherwise makes hover labels use a different mode).
+    st.plotly_chart(fig, use_container_width=True, theme=None)
+
+
+def format_insight_for_html(insight):
+    """Safely turn the bold Markdown labels in an insight into HTML."""
+    escaped_insight = html.escape(insight)
+    return re.sub(r'\*\*(.+?)\*\*', r'<strong>\1</strong>', escaped_insight)
 
 
 # Get current theme colors
@@ -194,14 +220,22 @@ st.markdown(f"""
         border-bottom: 2px solid {theme['border']};
         padding-bottom: 0.5rem;
     }}
+
+    /* Footer */
+    .dashboard-footer {{
+        color: {theme['text_secondary']};
+        text-align: center;
+        margin-top: 2rem;
+        padding: 1rem;
+        font-size: 0.85rem;
+    }}
     
     /* === TEXT ELEMENTS === */
     
     /* All text in main area */
     .element-container h1, .element-container h2, .element-container h3,
     .element-container h4, .element-container h5, .element-container h6,
-    .element-container p, .element-container span, .element-container div,
-    .element-container strong, .element-container b {{
+    .element-container p, .element-container strong, .element-container b {{
         color: {theme['text_primary']} !important;
     }}
     
@@ -328,6 +362,11 @@ def main():
         }}
         
         /* === DROPDOWN AND INPUT FIXES === */
+
+        /* Keep native controls and Base Web widgets in the selected dashboard mode. */
+        .stMultiSelect, [data-baseweb="select"], [data-baseweb="popover"] {{
+            color-scheme: {theme['color_scheme']};
+        }}
         
         /* Multiselect containers */
         .stMultiSelect > div > div {{
@@ -342,22 +381,40 @@ def main():
             color: {theme['text_primary']} !important;
         }}
         
-        /* Dropdown menu */
-        [data-baseweb="popover"] {{
+        /* Dropdowns are rendered in a portal outside the sidebar, so style each
+           menu layer instead of relying on the sidebar's inherited colors. */
+        [data-baseweb="popover"],
+        [data-baseweb="popover"] > div,
+        [data-baseweb="popover"] [data-baseweb="menu"],
+        [data-baseweb="popover"] [role="listbox"] {{
             background-color: {theme['card_bg']} !important;
+            color: {theme['text_primary']} !important;
+            border-color: {theme['grid_color']} !important;
         }}
         
-        [data-baseweb="menu"] {{
-            background-color: {theme['card_bg']} !important;
-        }}
-        
-        [data-baseweb="menu"] li {{
+        [data-baseweb="popover"] [role="option"],
+        [data-baseweb="popover"] [data-baseweb="menu"] li {{
             background-color: {theme['card_bg']} !important;
             color: {theme['text_primary']} !important;
         }}
+
+        [data-baseweb="popover"] [role="option"] *,
+        [data-baseweb="popover"] [data-baseweb="menu"] li * {{
+            color: inherit !important;
+        }}
         
-        [data-baseweb="menu"] li:hover {{
+        [data-baseweb="popover"] [role="option"]:hover,
+        [data-baseweb="popover"] [role="option"][aria-selected="true"],
+        [data-baseweb="popover"] [data-baseweb="menu"] li:hover,
+        [data-baseweb="popover"] [data-baseweb="menu"] li[aria-selected="true"] {{
             background-color: {theme['accent']} !important;
+            color: white !important;
+        }}
+
+        [data-baseweb="popover"] [role="option"]:hover *,
+        [data-baseweb="popover"] [role="option"][aria-selected="true"] *,
+        [data-baseweb="popover"] [data-baseweb="menu"] li:hover *,
+        [data-baseweb="popover"] [data-baseweb="menu"] li[aria-selected="true"] * {{
             color: white !important;
         }}
         
@@ -398,17 +455,6 @@ def main():
             color: {theme['text_primary']} !important;
         }}
         
-        /* === CHART AXES AND TEXT === */
-        
-        /* Force chart text color */
-        .js-plotly-plot text {{
-            fill: {theme['text_primary']} !important;
-        }}
-        
-        /* Chart container */
-        .plotly-graph-div {{
-            background-color: {theme['chart_bg']} !important;
-        }}
         </style>
     """, unsafe_allow_html=True)
     
@@ -675,7 +721,7 @@ def main():
             )
         )
         
-        st.plotly_chart(fig_trend, use_container_width=True)
+        render_plotly_chart(fig_trend, theme)
         
         # Show MoM growth metrics
         if len(mom_data) > 1:
@@ -742,7 +788,7 @@ def main():
                     title_font_color=theme['text_primary']
                 )
             )
-            st.plotly_chart(fig_region, use_container_width=True)
+            render_plotly_chart(fig_region, theme)
         else:
             st.info("No data available")
     
@@ -774,7 +820,7 @@ def main():
                     font=dict(color=theme['text_primary'])
                 )
             )
-            st.plotly_chart(fig_channel, use_container_width=True)
+            render_plotly_chart(fig_channel, theme)
         else:
             st.info("No data available")
     
@@ -817,7 +863,7 @@ def main():
                     title_font_color=theme['text_primary']
                 )
             )
-            st.plotly_chart(fig_category, use_container_width=True)
+            render_plotly_chart(fig_category, theme)
         else:
             st.info("No data available")
     
@@ -827,24 +873,30 @@ def main():
         top_products = get_top_products(filtered_df, top_n=10)
         
         if len(top_products) > 0:
+            product_value_labels = top_products['revenue'].apply(format_currency)
+            product_chart_height = max(400, len(top_products) * 36 + 70)
             fig_products = px.bar(
                 top_products,
                 x='revenue',
                 y='product',
                 orientation='h',
-                text='revenue',
+                text=product_value_labels,
                 color='revenue',
                 color_continuous_scale='Oranges' if st.session_state.theme == 'light' else 'Peach'
             )
             fig_products.update_traces(
-                texttemplate='₹%{text:,.0f}',
-                textposition='outside'
+                texttemplate='₹%{text}',
+                textposition='inside',
+                insidetextanchor='end',
+                textfont=dict(color='white', size=10)
             )
             fig_products.update_layout(
                 xaxis_title="Revenue (INR)",
                 yaxis_title="Product",
                 showlegend=False,
-                height=300,
+                height=product_chart_height,
+                uniformtext=dict(minsize=9, mode='hide'),
+                margin=dict(l=20, r=20, t=10, b=50),
                 plot_bgcolor=theme['chart_bg'],
                 paper_bgcolor=theme['chart_bg'],
                 font=dict(color=theme['text_primary'], size=10),
@@ -856,10 +908,12 @@ def main():
                 yaxis=dict(
                     categoryorder='total ascending', 
                     color=theme['text_primary'],
-                    title_font_color=theme['text_primary']
+                    title_font_color=theme['text_primary'],
+                    automargin=True,
+                    tickfont=dict(size=10)
                 )
             )
-            st.plotly_chart(fig_products, use_container_width=True)
+            render_plotly_chart(fig_products, theme)
         else:
             st.info("No data available")
     
@@ -870,7 +924,8 @@ def main():
     
     insights_html = '<div class="insight-box"><ul style="list-style-type: none; padding-left: 0;">'
     for insight in insights:
-        insights_html += f'<li style="color: {theme["text_primary"]}; margin-bottom: 0.5rem;">• {insight}</li>'
+        formatted_insight = format_insight_for_html(insight)
+        insights_html += f'<li style="color: {theme["text_primary"]}; margin-bottom: 0.5rem;">• {formatted_insight}</li>'
     insights_html += '</ul></div>'
     
     st.markdown(insights_html, unsafe_allow_html=True)
@@ -887,11 +942,9 @@ def main():
     
     # Footer
     st.markdown(
-        f"""
-        <div style="text-align: center; color: {theme['text_secondary']}; margin-top: 2rem; padding: 1rem;">
-            <small>Sales Performance Dashboard | MBA Data Science Project | AI Powered Developer Tools</small>
-        </div>
-        """,
+        '<footer class="dashboard-footer">'
+        'Sales Performance Dashboard | MBA Data Science Project | AI Powered Developer Tools'
+        '</footer>',
         unsafe_allow_html=True
     )
 
