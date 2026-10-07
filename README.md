@@ -1,5 +1,13 @@
 # T01 – Sales Performance Dashboard App
 
+Name: Samyak Acharya
+
+PRN: 26030242002
+
+Batch : 2026-2028 (M.B.A. DS & DA)
+
+🚀 **Live Demo**: [https://sales-performance-dashboard-dotx.streamlit.app/](https://sales-performance-dashboard-dotx.streamlit.app/)
+
 ## 📋 Project Overview
 
 An interactive Sales Performance Dashboard built with Python and Streamlit for analyzing sales data across multiple dimensions. This dashboard helps Regional Sales Heads understand performance trends, identify opportunities, and make data-driven decisions.
